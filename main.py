@@ -1,9 +1,13 @@
-from MRE2 import MREEnv
-from Agentag import Agent
+from MRE import MREEnv
+from TD3 import Agent
+#from DoubleQ import Agent
+#from DDPG import Agent
+from DQN import Agent
 import numpy as np
 from Immune import immune
 import datetime
 import matplotlib.pyplot as plt
+from Verify import verify
 env = MREEnv()
 imm = immune()
 agent = Agent(state_size=1, action_size=1, f_size=1)
@@ -34,7 +38,7 @@ for episode in range(episodes):
     for step in range(max_steps): 
         action = agent.act(state, episode ,f_four) 
         next_state, reward, done, f_ex, f_MRE = env.stp(action,f_re) 
-        agent.remember(state, action, reward, next_state, f_four, f_re, done)
+        agent.remember(state, action, reward, next_state, f_four, done)
         agent.replay(batch_size, step)
         state = next_state 
         score += reward 
@@ -43,9 +47,9 @@ for episode in range(episodes):
             print('action=',np.array(action))
             print('step=',step)
             break
-        if (step+1) % 10 == 0: 
-            clone, reward_ave, memory, bad = imm.clone_selection(n_clones)
-            imm.mutation(clone, memory, bad, reward_ave=reward_ave, mutation_rate=mutation_rate, mutation_range=mutation_range)
+        # if (step+1) % 10 == 0: 
+        #     clone, reward_ave, memory, bad = imm.clone_selection(n_clones)
+        #     imm.mutation(clone, memory, bad, reward_ave=reward_ave, mutation_rate=mutation_rate, mutation_range=mutation_range)
         if step % 20 == 0:
             print('f_MRE=', f_MRE)
     scores.append(score)
@@ -55,6 +59,9 @@ current_time = datetime.datetime.now()
 end_time = current_time.timestamp()
 training_time = end_time - start_time
 print("Time:", training_time)
+
+state = np.random.uniform(low=0.0, high=10.0, size=(1,))
+ver.verify_conclude(state)
 
 plt.plot(scores)
 plt.xlabel('Episode')
