@@ -15,7 +15,7 @@ class immune:
         reward_ave = np.mean(affinity)
         index = np.array(index)
         index.sort()
-        for i in reversed(index):  # 反向删除可以避免元素移动
+        for i in reversed(index):  
             Agent.memory.pop(i)
         for i in range(len(affinity)):
             if affinity[i] >= reward_ave:
