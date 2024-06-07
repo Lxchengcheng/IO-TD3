@@ -2,7 +2,7 @@ from MRE import MREEnv
 from TD3 import Agent
 #from DoubleQ import Agent
 #from DDPG import Agent
-from DQN import Agent
+#from DQN import Agent
 import numpy as np
 from Immune import immune
 import datetime
