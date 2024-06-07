@@ -9,7 +9,7 @@ from tensorflow.keras.layers import Dropout
 import random
 class Agent:
     memory = []
-    def __init__(self, state_size, action_size, f_size, max_memory_size=5000, gamma=0.8, tau=0.001, actor_lr=0.001, critic_lr=0.001): #进行实例化
+    def __init__(self, state_size, action_size, f_size, max_memory_size=5000, gamma=0.8, tau=0.001, actor_lr=0.001, critic_lr=0.001): 
         self.action_size = action_size
         self.state_size = state_size
         self.f_size = f_size
@@ -32,12 +32,12 @@ class Agent:
         self.target2_critic = self.build_critic()
         self.actor_optimizer = Adam(learning_rate=self.actor_lr)
         self.critic_optimizer = Adam(learning_rate=self.critic_lr)
-    def build_actor(self): #创建神经网络
-        input_actor1 = Input(shape=(1,)) #设置神经网络的输入
-        input_actor2 = Input(shape=(251,)) #设置神经网络的输出
-        x1 = Dense(20, activation='relu',kernel_initializer='glorot_uniform')(input_actor1) #设置神经网络的激活函数和神经元数目
+    def build_actor(self): 
+        input_actor1 = Input(shape=(1,)) 
+        input_actor2 = Input(shape=(251,)) 
+        x1 = Dense(20, activation='relu',kernel_initializer='glorot_uniform')(input_actor1) 
         x2 = Dense(20, activation='relu', kernel_initializer='glorot_uniform')(input_actor2)
-        x = concatenate([x1, x2], axis=1) #进行组合
+        x = concatenate([x1, x2], axis=1) 
         x = Dense(20, activation='relu',kernel_initializer='glorot_uniform')(x)
         x = Dropout(0.1)(x)
         x = Dense(20, activation='relu', kernel_initializer='glorot_uniform')(x)
@@ -49,7 +49,7 @@ class Agent:
         model_actor = Model(inputs=[input_actor1,input_actor2], outputs=output_actor)
         model_actor.compile(loss='mse', optimizer=tf.keras.optimizers.Adam(lr=self.actor_lr))
         return model_actor
-    def build_critic(self): #创建神经网络
+    def build_critic(self): 
         input_critic1 = Input(shape=(self.state_size,))
         input_critic2 = Input(shape=(251,))
         input_critic3 = Input(shape=(self.action_size,))
@@ -68,17 +68,17 @@ class Agent:
         model_critic.compile(loss='mse', optimizer=tf.keras.optimizers.Adam(lr=self.critic_lr))
         return model_critic
     def act(self, state, episode, f):
-        scale = np.power(0.8, episode) #设置衰减值
-        action = self.actor([state,f]) + truncnorm(-0.5, 0.5, loc=0,scale=scale).rvs() #获取的电流值，并在（-0.5,0.5）*0.8次方波动，波动范围随着episode的回合数递减
+        scale = np.power(0.8, episode) 
+        action = self.actor([state,f]) + truncnorm(-0.5, 0.5, loc=0,scale=scale).rvs() 
         return action
-    def remember(self, state, action, reward, next_state, f_four, f_re, done): #存储经验池
+    def remember(self, state, action, reward, next_state, f_four, f_re, done): 
         if len(self.memory) < self.max_memory_size:
             self.memory.append((state, action, reward, next_state, f_four, f_re, done))
         else:
             print('--------------''\n',"remember over size,",'\n','--------------')
             self.memory.pop(0)
             self.memory.append((state, action, reward, next_state, f_four, f_re, done))
-    def sample(self, batch_size): #创建样本进行随机取样
+    def sample(self, batch_size): 
         fit = [getter[2] for getter in self.memory]
         fit = np.array(fit)
         priorities = np.exp(fit - np.max(fit))
@@ -86,7 +86,7 @@ class Agent:
         indices = np.random.choice(len(self.memory), batch_size, p=prob, replace=False)
         samples = itemgetter(*indices)(self.memory)
         return samples
-    def replay(self, batch_size, step): #根据样本进行神经网络的梯度训练
+    def replay(self, batch_size, step): 
         if len(self.memory) < batch_size:
             return
         #minibatch = self.sample(batch_size)
@@ -116,7 +116,7 @@ class Agent:
                 actor_grads = tape.gradient(actor_loss, self.actor.trainable_variables)
                 self.actor_optimizer.apply_gradients(zip(actor_grads, self.actor.trainable_variables))
                 self.update_target_networks()
-    def update_target_networks(self): #更新目标网络
+    def update_target_networks(self):
         actor_weights = self.actor.get_weights()
         target_actor_weights = self.target_actor.get_weights()
         critic1_weights = self.critic1.get_weights()
