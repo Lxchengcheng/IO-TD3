@@ -52,19 +52,19 @@ class Agent:
             action = np.random.choice(Action)
         return action
 
-    def remember(self, state, action, reward, next_state, f, done):
+    def remember(self, state, action, reward, next_state, f, f_re, done):
         if len(self.memory) < self.max_memory_size:
-            self.memory.append((state, action, reward, next_state, f, done))
+            self.memory.append((state, action, reward, next_state, f, f_re, done))
         else:
             #print('--------------''\n','remember=',episode,'\n''--------------')
             self.memory.pop(0)
-            self.memory.append((state, action, reward, next_state, f, done))
+            self.memory.append((state, action, reward, next_state, f, f_re, done))
 
     def replay(self, batch_size, step):
         if len(self.memory) < batch_size:
             return
         minibatch = random.sample(self.memory, batch_size)
-        for state, action, reward, next_state, f,  done in minibatch:
+        for state, action, reward, next_state, f,  f1, done in minibatch:
             target_q = self.target([next_state, f])
             qt_max = np.max(target_q)
             y = np.mean(reward + self.gamma * (1 - done) * qt_max)
