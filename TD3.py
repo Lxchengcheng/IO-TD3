@@ -91,7 +91,7 @@ class Agent:
             return
         #minibatch = self.sample(batch_size)
         minibatch = random.sample(self.memory, batch_size)
-        for state, action, reward, next_state, f, done in minibatch:
+        for state, action, reward, next_state, f, f_re, done in minibatch:
             next_action = self.target_actor([next_state,f]) + truncnorm(-0.5, 0.5, loc=0).rvs()
             target_q1 = self.target1_critic([next_state, f, next_action])
             target_q2 = self.target2_critic([next_state, f, next_action])
