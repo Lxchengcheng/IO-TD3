@@ -78,21 +78,13 @@ class Agent:
             print('--------------''\n',"remember over size,",'\n','--------------')
             self.memory.pop(0)
             self.memory.append((state, action, reward, next_state, f_four, f_re, done))
-    def sample(self, batch_size): 
-        fit = [getter[2] for getter in self.memory]
-        fit = np.array(fit)
-        priorities = np.exp(fit - np.max(fit))
-        prob= priorities/np.sum(priorities)
-        indices = np.random.choice(len(self.memory), batch_size, p=prob, replace=False)
-        samples = itemgetter(*indices)(self.memory)
-        return samples
+
     def replay(self, batch_size, step): 
         if len(self.memory) < batch_size:
             return
-        #minibatch = self.sample(batch_size)
         minibatch = random.sample(self.memory, batch_size)
         for state, action, reward, next_state, f, f1, done in minibatch:
-            next_action = self.target_actor([next_state,f]) + truncnorm(-0.01, 0.01, loc=0).rvs()
+            next_action = self.target_actor([next_state,f]) 
             target_q1 = self.target1_critic([next_state, f, next_action])
             target_q2 = self.target2_critic([next_state, f, next_action])
             if np.sum(target_q1) > np.sum(target_q2):
