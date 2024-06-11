@@ -18,7 +18,7 @@ class Agent:
         self.critic_lr = critic_lr
         self.gamma = gamma
         self.tau = tau
-        self.max_current = 3.0
+        self.max_current = 1.5
         self.index = 0
         self.actor_lr = actor_lr
         self.critic_lr = critic_lr
