@@ -12,7 +12,7 @@ class verify:
         S = 2 * np.pi * (R1 + R2) * l 
         H = 0.005 
         while i < 4:
-            print('第' + str(i) + '次')
+            print('Num:' + str(i))
             # m1 = 15.0 
             # m2 = 7.0
             # f1 = 5.8  
