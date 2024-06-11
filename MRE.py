@@ -21,7 +21,7 @@ class MREEnv(gym.Env):
         self.state = None
 
     def reset(self):
-        self.f_re = np.random.uniform(10, 20, size=(1,)) 
+        self.f_re = np.random.randint(10, 20, size=(1,)) 
         self.state = np.random.uniform(low=0.0, high=10.0, size=(1,))
         return self.state, self.f_re
 
