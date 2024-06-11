@@ -1,7 +1,7 @@
 from operator import itemgetter
 import numpy as np
 from Agentag import Agent
-from MRE2 import MREEnv
+from MRE import MREEnv
 env = MREEnv()
 class immune:
     def clone_selection(self, n_clones):
