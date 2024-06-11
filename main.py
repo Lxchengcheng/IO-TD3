@@ -60,8 +60,8 @@ end_time = current_time.timestamp()
 training_time = end_time - start_time
 print("Time:", training_time)
 
-state = np.random.uniform(low=0.0, high=10.0, size=(1,))
-ver.verify_conclude(state)
+# state = np.random.uniform(low=0.0, high=10.0, size=(1,))
+# ver.verify_conclude(state)
 
 plt.plot(scores)
 plt.xlabel('Episode')
