@@ -38,7 +38,7 @@ for episode in range(episodes):
     for step in range(max_steps): 
         action = agent.act(state, episode ,f_four) 
         next_state, reward, done, f_ex, f_MRE = env.stp(action,f_re) 
-        agent.remember(state, action, reward, next_state, f_four, done)
+        agent.remember(state, action, reward, next_state, f_four, f_re, done)
         agent.replay(batch_size, step)
         state = next_state 
         score += reward 
