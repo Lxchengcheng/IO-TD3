@@ -18,7 +18,7 @@ class Agent:
         self.critic_lr = critic_lr
         self.gamma = gamma
         self.tau = tau
-        self.max_current = 3.0
+        self.max_current = 1.5
         self.index = 0
         self.actor_lr = actor_lr
         self.critic_lr = critic_lr
@@ -44,8 +44,8 @@ class Agent:
         x = Dropout(0.1)(x)
         x = Dense(10, activation='relu',kernel_initializer='glorot_uniform')(x)
         x = Dense(8, activation='relu',kernel_initializer='glorot_uniform')(x)
-        output_actor = Dense(1, activation='sigmoid', kernel_initializer='glorot_uniform')(x)
-        output_actor = tf.multiply(output_actor, tf.constant(self.max_current))
+        output_actor = Dense(1, activation='tanh', kernel_initializer='glorot_uniform')(x)
+        output_actor = tf.multiply((output_actor + 1.0), tf.constant(self.max_current))
         model_actor = Model(inputs=[input_actor1,input_actor2], outputs=output_actor)
         model_actor.compile(loss='mse', optimizer=tf.keras.optimizers.Adam(lr=self.actor_lr))
         return model_actor
